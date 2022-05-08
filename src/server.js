@@ -10,10 +10,34 @@ const motelRouter = require('./modules/motel/motel.route')
 
 const auth = require('./middleware/auth')
 const swagger = require('./utils/swagger')
+const motelSocket = require("./modules/motel/motel.socket")
+const app = express()
+const http = require('http')
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server,  {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["my-custom-header"],
+      credentials: true
+    }
+  });
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    motelSocket(socket)
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+
+
 
 require('dotenv').config()
 
-const app = express()
+
+
 
 app.use(cors({
     origin: '*',
@@ -56,4 +80,4 @@ app.use((error, req, res, next) => {
         message: error.message || 'Internal Server Error',
     });
 });
-app.listen(process.env.PORT)
+server.listen(process.env.PORT)

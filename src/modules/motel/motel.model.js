@@ -50,7 +50,7 @@ const Motel = new Schema({
         enum: ['renting', 'roomate'],
         default: 'renting'
     },
-    zoomType: {
+    roomType: {
         type: Number,
         enum: [0, 1, 2, 3, 4],
         default: 0

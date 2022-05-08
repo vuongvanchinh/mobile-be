@@ -29,7 +29,7 @@ router.get('/' , motelController.getMotels)
  * @param {string} title.form.required
  * @param {string} description.form.required
  * @param {string} address.form.required
- * @param {number} zoomType.form.required
+ * @param {number} roomType.form.required
  * @param {string} postType.form.required
  * @example request - payload
  * {
@@ -37,7 +37,7 @@ router.get('/' , motelController.getMotels)
  *  "description": "",
  *  "address":"",
  *  "rentalPrice":0,
- *  "zoomType": 0,
+ *  "roomType": 0,
  *  "postType": "renting|roomate"
  * }
  */
@@ -69,7 +69,7 @@ router.put('/:id/censored', isAdmin, motelController.censoredMotel)
  *  "description": "",
  *  "address":"",
  *  "rentalPrice":0,
- *  "zoomType": 0,
+ *  "roomType": 0,
  *  "postType": "renting|roomate",
  *  "images": [{"_id": "", "url":""}]
  * }
