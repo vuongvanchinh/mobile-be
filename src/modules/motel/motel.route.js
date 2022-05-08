@@ -20,8 +20,6 @@ router.post('/:id/upload-image', upload.array('images', 4), motelController.uplo
  * GET /api/motel
  * @tags Motel
  * @param {string} censored.query
- * @param {string} rentalPrice.query
- * @param {string} minRentalPrice.query
  */
 router.get('/' , motelController.getMotels)
 
@@ -31,9 +29,7 @@ router.get('/' , motelController.getMotels)
  * @param {string} title.form.required
  * @param {string} description.form.required
  * @param {string} address.form.required
- * @param {number} rentalPrice.form.required
- * @param {number} minRentalPrice.form.required
- * @param {number} type.form.required
+ * @param {number} zoomType.form.required
  * @param {string} postType.form.required
  * @example request - payload
  * {
@@ -41,9 +37,8 @@ router.get('/' , motelController.getMotels)
  *  "description": "",
  *  "address":"",
  *  "rentalPrice":0,
- *  "minRentalPrice":0,
- *  "type": 1,
- *  "postType": "renting|roomate",
+ *  "zoomType": 0,
+ *  "postType": "renting|roomate"
  * }
  */
 router.post('/', auth, motelController.createMotel)
@@ -64,7 +59,6 @@ router.put('/:id/censored', isAdmin, motelController.censoredMotel)
  * @param {string} title.form.required
  * @param {string} description.form.required
  * @param {string} address.form.required
- * @param {number} rentalPrice.form.required
  * @param {number} minRentalPrice.form.required
  * @param {number} type.form.required
  * @param {string} postType.form.required
@@ -75,8 +69,7 @@ router.put('/:id/censored', isAdmin, motelController.censoredMotel)
  *  "description": "",
  *  "address":"",
  *  "rentalPrice":0,
- *  "minRentalPrice":0,
- *  "type": 1,
+ *  "zoomType": 0,
  *  "postType": "renting|roomate",
  *  "images": [{"_id": "", "url":""}]
  * }
