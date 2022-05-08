@@ -24,47 +24,11 @@ app.use(
 )
 app.use(boolParser())
 
-app.use('/api/donations', (req, res) => {
-    res.json([
-        {
-            _id: '1',
-            amount: 85,
-            paymenttype: 'Paypal',
-            upvotes: 0
-        },
-        {
-            _id: '2',
-            amount: 99,
-            paymenttype: 'Direct',
-            upvotes: 90
-        },
-        {
-            _id: '3',
-            amount: 500,
-            paymenttype: 'Paypal',
-            upvotes: 10
-        },
-        {
-            _id: '4',
-            amount: 50,
-            paymenttype: 'Direct',
-            upvotes: 50
-        },
-        {
-            _id: '5',
-            amount: 560,
-            paymenttype: 'Paypal',
-            upvotes: 50
-        }
-    ])
-})
 // parse user to header
 auth(app)
-console.log(__dirname + '/../public')
-// app.use('/public', express.static(__dirname + '/public'));
-// app.use('/public', express.static(__dirname + './public'));
+
 app.use('/public', express.static(__dirname + '/../public'));
-// app.use('/public', express.static(__dirname + '../public'));
+
 // swager 
 swagger(app)
 

@@ -21,10 +21,6 @@ const Motel = new Schema({
         type: Number,
         min: 0        
     },
-    minRentalPrice:  {
-        type: Number,
-        min: 0
-    },
     owner: {
         type: Schema.Types.ObjectId,
         ref:'User',
@@ -46,15 +42,26 @@ const Motel = new Schema({
         type: Array
     },
     area: {
-        type: Number
+        type: Number,
+        default: 30
     },
     postType: {
         type: String,
         enum: ['renting', 'roomate'],
+        default: 'renting'
     },
-    type: {
+    zoomType: {
         type: Number,
-        enum: [0, 1, 2, 3, 4]
+        enum: [0, 1, 2, 3, 4],
+        default: 0
+    },
+    contactName: {
+        type: String,
+        default: ''
+    },
+    contactPhone: {
+        type: String,
+        default: ''
     }
 }, {
     timestamps: true
