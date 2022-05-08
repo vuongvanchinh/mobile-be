@@ -6,7 +6,7 @@ const motelSocket = (io) => {
             try {
                 const motel = await Motel.findOne({_id: socket})
                 if (motel) {
-                    io.emit("newMotel", motel)
+                    io.emit("new-motel", motel)
                 }
             } catch (error) {
                 console.log(error)
