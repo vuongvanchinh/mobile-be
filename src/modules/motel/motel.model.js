@@ -47,8 +47,8 @@ const Motel = new Schema({
     },
     postType: {
         type: String,
-        enum: ['renting', 'roomate'],
-        default: 'renting'
+        enum: [0, 1],
+        default: 0
     },
     roomType: {
         type: Number,
