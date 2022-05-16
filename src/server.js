@@ -84,4 +84,4 @@ app.use((error, req, res, next) => {
         message: error.message || 'Internal Server Error',
     });
 });
-server.listen(process.env.PORT, '192.168.1.2')
+server.listen(process.env.PORT)
