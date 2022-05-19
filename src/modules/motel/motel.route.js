@@ -17,6 +17,12 @@ router.get('/stats', isAdmin, motelController.stats)
 router.post('/:id/upload-image', upload.array('images', 4), motelController.uploadImage)
 
 /**
+ * PUT /api/motel/upload-image
+ * @tags Motel
+ */
+ router.put('/:id/update-image', upload.array('images', 4), motelController.updateMotelImage)
+
+/**
  * GET /api/motel
  * @tags Motel
  * @param {string} censored.query

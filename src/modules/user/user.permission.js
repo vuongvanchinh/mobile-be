@@ -29,10 +29,26 @@ const isActive = function(req, res, next) {
   }
 }
 
+const isItSelfOrAdmin = function(req, res, next) {
+  const user = req.user
+  if (user && user.role === "admin") {
+    return next()
+  }
+  const {id} = req.params
+  if (req.user && (req.user._id === id)) {
+    next();
+  } else {
+    return res.status(401).json({ message: 'Require is admin or it self' });
+  }
+}
+
+
+
 
 module.exports = {
     isAdmin,
     isLessor,
     isLessee,
-    isActive
+    isActive,
+    isItSelfOrAdmin
 }

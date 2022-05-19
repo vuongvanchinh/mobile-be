@@ -12,11 +12,11 @@ const auth = require('./middleware/auth')
 const swagger = require('./utils/swagger')
 const motelSocket = require("./modules/motel/motel.socket")
 const morgan = require('morgan')
-console.log(morgan)
+
 morgan(':method :url :status :res[content-length] - :response-time ms')
 const app = express()
 const http = require('http')
-app.use(morgan());
+// app.use(morgan());
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server,  {

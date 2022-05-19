@@ -100,13 +100,16 @@ class UserController {
     }
     
     updateUser(req, res, next){
+        User.updateMany({}, {favoriteAreas: ['Alo Alo'], favoriteArea: undefined})
         const {id} = req.params
+        // console.log(req)
         const updateData = req.body
-        if (updateData.role == role.admin) {
+        if (updateData.role === role.admin) {
             updateData.role = undefined
         }
         
         updateData.password = undefined
+        // console.log(updateData, "UPDATE DATA")
         User.findByIdAndUpdate({_id:id}, updateData, {new: true}).then(user => {
             return res.json(user)
         }).catch(err => {

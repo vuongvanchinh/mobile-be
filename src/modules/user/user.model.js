@@ -44,6 +44,14 @@ const User = new Schema({
         maxlength: 100,
         default: ''
     },
+    notiToken: {
+        type: String,
+        default: ''
+    },
+    favoriteAreas: {
+        type: Array,
+        default: ['']
+    }
         
 }, {
     timestamps: true

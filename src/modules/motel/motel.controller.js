@@ -5,13 +5,14 @@ const { Image } = require('./motel.model')
 
 class MotelController {
     getMotels(req, res, next) {
+       
         const query = req.query
         if (query.title) {
             query.title = {
                 $regex:  new RegExp(query.title, "i")
             }
         }
-        Motel.find(query).populate('images', {url:1}).populate('owner', {name:1}).then(motels => {
+        Motel.find(query).populate('owner', {name:1}).then(motels => {
             for(let i = 0; i < motels.length; i++) {
                 motels[i].images = fillLinkImages(motels[i].images, req.protocol + '://' + req.get('host'))
             }
@@ -98,11 +99,9 @@ class MotelController {
     }
     
     async uploadImage(req, res, next) {
+    
         const {id} = req.params
-        const d = await Image.deleteMany({})
         const motel = await Motel.findOne({ _id: id });
-        console.log(motel)
-        console.log(req)
         if (motel) {
             if (req.files) {
                 const arr = req.files.map(item => {
@@ -113,10 +112,9 @@ class MotelController {
                 })
                 if (arr.length) {
                     Image.insertMany(arr).then(function(images){
-                        motel.images = images.map(item => item._id)
-                        motel.save().then(() => {
-                            return res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))
-                        })
+                        motel.images.push(images.map(i => i._id))
+                        motel.save()
+                       res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))
                         
                     }).catch(err => {
                         console.log(err)
@@ -141,6 +139,47 @@ class MotelController {
                 message: "Not found"
             })
         }
+    }
+
+    async updateMotelImage(req, res, next){
+        const {id} = req.params
+        
+        const motel = await Motel.findOne({ _id: id });
+        if (motel) {
+            
+            Image.deleteMany({
+                _id: { $nin: req.body.currents.split(' ')},
+                motel: id
+            }).then(imgs => console.log(imgs)).catch(err => console.log(err))
+
+            if (req.files) {
+                const arr = req.files.map(item => {
+                    return {
+                        motel: id,
+                        url: item.path
+                    }
+                })
+                if (arr.length) {
+                    Image.insertMany(arr).then(images => {
+                        motel.images.push(images.map(i => i._id))
+                        motel.save()
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        return res.json(err)
+                    })
+                    
+                } 
+            } 
+            Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))) 
+
+        } else {
+            next({
+                status: 404,
+                message: "Not found"
+            })
+        }
+
     }
     async stats(req, res, next) {
         let query = req.query

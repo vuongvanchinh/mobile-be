@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const userController = require('./user.controller')
 const auth = require('../../middleware/auth/requireAuthenticate')
-const {isAdmin} = require('../user/user.permission')
+const {isItSelfOrAdmin, isAdmin} = require('../user/user.permission')
 const motelController = require('../motel/motel.controller')
 
 
@@ -25,12 +25,14 @@ router.post('/login', userController.login)
  * @param {string} email.form.required
  * @param {string} password.form.required
  * @param {string} phone.form.required
+ * @param {string} notiToken.form.required
  * @example request - other payload example
  * {
  *   "email": "",
  *   "password": "",
  *   "name": "",
- *   "phone": ""
+ *   "phone": "",
+ *   "notiToken":""
  * }
  */
 router.post('/register', userController.register)
@@ -70,7 +72,7 @@ router.get('/:id', auth, isAdmin, userController.getUserDetail)
  * {
  * }
 */
-router.put('/:id', auth, isAdmin, userController.updateUser)
+router.put('/:id', isItSelfOrAdmin, userController.updateUser)
 
 /**
  * delete /api/user/{id}
