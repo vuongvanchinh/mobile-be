@@ -111,6 +111,7 @@ class UserController {
         updateData.password = undefined
         // console.log(updateData, "UPDATE DATA")
         User.findByIdAndUpdate({_id:id}, updateData, {new: true}).then(user => {
+            user.password = undefined
             return res.json(user)
         }).catch(err => {
             return next({
