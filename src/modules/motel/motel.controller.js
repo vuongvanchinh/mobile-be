@@ -12,7 +12,7 @@ class MotelController {
                 $regex:  new RegExp(query.title, "i")
             }
         }
-        Motel.find(query).populate('owner', {name:1}).then(motels => {
+        Motel.find(query).populate('images', {url: 1}).populate('owner', {name:1}).then(motels => {
             for(let i = 0; i < motels.length; i++) {
                 motels[i].images = fillLinkImages(motels[i].images, req.protocol + '://' + req.get('host'))
             }
