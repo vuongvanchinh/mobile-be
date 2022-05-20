@@ -51,7 +51,13 @@ const User = new Schema({
     favoriteAreas: {
         type: Array,
         default: ['']
-    }
+    },
+    favoriteMotels: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Motel'
+        }
+    ]
         
 }, {
     timestamps: true
