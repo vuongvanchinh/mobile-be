@@ -178,10 +178,12 @@ class MotelController {
                         return res.json(err)
                     })
                     
-                } 
+                } else {
+                    Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host'))))
+                    .catch(err => res.json(err))
+                }
             } else {
-                Image
-                .find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host'))))
+                Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host'))))
                 .catch(err => res.json(err))
             }
             
