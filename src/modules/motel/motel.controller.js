@@ -1,6 +1,7 @@
 const { Motel } = require('./motel.model')
 const { handleCreateImages, fillLinkImages } = require('./motel.help')
 const { Image } = require('./motel.model')
+const { json } = require('express/lib/response')
 
 
 class MotelController {
@@ -145,6 +146,9 @@ class MotelController {
 
     async updateMotelImage(req, res, next){
         const {id} = req.params
+        console.log("🚀 ~ file: motel.controller.js ~ line 149 ~ MotelController ~ updateMotelImage ~ id", id)
+        const f = req.files
+        console.log("🚀 ~ file: motel.controller.js ~ line 151 ~ MotelController ~ updateMotelImage ~ f", f)
         
         const motel = await Motel.findOne({ _id: id });
         if (motel) {
@@ -152,9 +156,9 @@ class MotelController {
             Image.deleteMany({
                 _id: { $nin: req.body.currents.split(' ')},
                 motel: id
-            }).then(imgs => console.log(imgs)).catch(err => console.log(err))
+            }).then(imgs => console.log(imgs)).catch(err => res.json(err))
 
-            if (req.files) {
+            if (req.files.length) {
                 const arr = req.files.map(item => {
                     return {
                         motel: id,
@@ -166,7 +170,7 @@ class MotelController {
                         const imgIds = images.map(i => i._id.toString())
                         motel.images.push(...imgIds)
                         motel.save().then(motel => {
-                            Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))) 
+                            Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))).catch(err => res.json(err))
                         })
                     })
                     .catch(err => {
@@ -176,7 +180,9 @@ class MotelController {
                     
                 } 
             } else {
-                Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))) 
+                Image
+                .find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host'))))
+                .catch(err => res.json(err))
             }
             
 
