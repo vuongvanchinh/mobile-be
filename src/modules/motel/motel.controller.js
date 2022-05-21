@@ -152,11 +152,17 @@ class MotelController {
         
         const motel = await Motel.findOne({ _id: id });
         if (motel) {
+            if (req.body.currents) {
+                Image.deleteMany({
+                    _id: { $nin: req.body.currents.split(' ')},
+                    motel: id
+                }).then(imgs => console.log(imgs)).catch(err => res.json(err))
+            } else {
+                Image.deleteMany({
+                    motel: id
+                }).then(imgs => console.log(imgs)).catch(err => res.json(err))
+            }
             
-            Image.deleteMany({
-                _id: { $nin: req.body.currents.split(' ')},
-                motel: id
-            }).then(imgs => console.log(imgs)).catch(err => res.json(err))
 
             if (req.files.length) {
                 const arr = req.files.map(item => {
