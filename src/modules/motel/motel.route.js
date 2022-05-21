@@ -97,7 +97,7 @@ router.delete('/:id', isAdminOrOwner, motelController.deleteMotel)
  * @tags Motel
  * @param {string} id.path
  */
-router.get('/:id', auth, motelController.motelDetail)
+router.get('/:id', motelController.motelDetail)
 
 
 module.exports = router

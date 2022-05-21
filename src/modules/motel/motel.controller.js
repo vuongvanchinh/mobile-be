@@ -112,7 +112,9 @@ class MotelController {
                 })
                 if (arr.length) {
                     Image.insertMany(arr).then(function(images){
-                        motel.images.push(images.map(i => i._id))
+                        const imgIds = images.map(i => i._id.toString())
+
+                        motel.images.push(...imgIds)
                         motel.save()
                        res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))
                         
@@ -161,8 +163,11 @@ class MotelController {
                 })
                 if (arr.length) {
                     Image.insertMany(arr).then(images => {
-                        motel.images.push(images.map(i => i._id))
-                        motel.save()
+                        const imgIds = images.map(i => i._id.toString())
+                        motel.images.push(...imgIds)
+                        motel.save().then(motel => {
+                            Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))) 
+                        })
                     })
                     .catch(err => {
                         console.log(err)
@@ -170,8 +175,10 @@ class MotelController {
                     })
                     
                 } 
-            } 
-            Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))) 
+            } else {
+                Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))) 
+            }
+            
 
         } else {
             next({
