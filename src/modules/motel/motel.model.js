@@ -62,6 +62,10 @@ const Motel = new Schema({
     contactPhone: {
         type: String,
         default: ''
+    },
+    thumbnail: {
+        type: Schema.Types.ObjectId,
+        ref: 'Image',
     }
 }, {
     timestamps: true

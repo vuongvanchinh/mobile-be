@@ -116,6 +116,9 @@ class MotelController {
                         const imgIds = images.map(i => i._id.toString())
 
                         motel.images.push(...imgIds)
+                        if (motel.images.length) {
+                            motel.thumbnail = motel.images[0].toString()
+                        }
                         motel.save()
                        res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))
                         
@@ -162,7 +165,9 @@ class MotelController {
                     motel: id
                 }).then(imgs => console.log(imgs)).catch(err => res.json(err))
             }
-            
+
+            const thumbnail = req.body.thumbnail
+            console.log("🚀 ~ file: motel.controller.js ~ line 170 ~ MotelController ~ updateMotelImage ~ thumbnail", thumbnail)
 
             if (req.files.length) {
                 const arr = req.files.map(item => {
@@ -175,6 +180,11 @@ class MotelController {
                     Image.insertMany(arr).then(images => {
                         const imgIds = images.map(i => i._id.toString())
                         motel.images.push(...imgIds)
+                        if (thumbnail.length < 2 && thumbnail.length > 0) {
+                            motel.thumbnail = images[parseInt(thumbnail)]._id.toString()
+                        } else if (thumbnail.length > 10){
+                            motel.thumbnail = thumbnail
+                        }
                         motel.save().then(motel => {
                             Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))).catch(err => res.json(err))
                         })
@@ -189,8 +199,15 @@ class MotelController {
                     .catch(err => res.json(err))
                 }
             } else {
-                Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host'))))
-                .catch(err => res.json(err))
+                if (thumbnail === '' || thumbnail === undefined) {
+                    motel.thumbnail = null
+                } else {
+                    motel.thumbnail = thumbnail
+                }
+                motel.save().then(motel => {
+                     Image.find({motel: id}).then(images => res.json(fillLinkImages(images, req.protocol + '://' + req.get('host'))))
+                    .catch(err => res.json(err))
+                })
             }
             
 
