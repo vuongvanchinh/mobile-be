@@ -282,11 +282,17 @@ class MotelController {
                 }
     
                 user.save().then(user => {
-                    Motel.find({_id: {$in: user.favoriteMotels}}).then(motels => 
+                    Motel.find({_id: {$in: user.favoriteMotels}}).populate('images').then(motels => {
+                        for(let i = 0; i < motels.length; i++) {
+                            motels[i].images = fillLinkImages(motels[i].images, req.protocol + '://' + req.get('host'))
+                        }
+                        
+
                         res.json({
                             current: !include,
                             currentList: motels
                         })
+                    }
                     )
                 })
             }
@@ -303,8 +309,14 @@ class MotelController {
     async myFavoriteMotel (req, res, next) {
         const user = await User.findOne({_id: req.user._id})
         if (user) {
-            Motel.find({_id: {$in: user.favoriteMotels}}).then(motels => 
+            Motel.find({_id: {$in: user.favoriteMotels}}).populate('images').then(motels => {
+                for(let i = 0; i < motels.length; i++) {
+                    motels[i].images = fillLinkImages(motels[i].images, req.protocol + '://' + req.get('host'))
+                }
+                // res.json(motels)
                 res.json(motels)
+                
+            }
             )
         } else {
             return next({
