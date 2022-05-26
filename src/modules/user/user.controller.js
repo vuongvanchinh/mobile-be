@@ -146,8 +146,9 @@ class UserController {
 
     async stats (req, res, next) {
         let query = req.query
+        console.log("🚀 ~ file: user.controller.js ~ line 149 ~ UserController ~ stats ~ query", query)
         if (Object.keys(query).length === 0) {
-            query.type = 1
+            query.role = "lessee"
         }
         try {
             const pri = await User.count(query)

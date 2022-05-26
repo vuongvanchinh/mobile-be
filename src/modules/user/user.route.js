@@ -47,7 +47,7 @@ router.get('/info', auth, (req, res, next) => {
  * get /api/user/stats?role=lesee
  * @tags User
 */
-router.get('/stats', motelController.stats)
+router.get('/stats', userController.stats)
 
 
 /**

@@ -36,7 +36,7 @@ const Motel = new Schema({
     rate: { type: Number, default: 0},
     censored: {
         type: Boolean,
-        default:false
+        default:true
     },
     utilities: {
         type: Array

@@ -5,11 +5,26 @@ const motelController = require('./motel.controller')
 const { isAdmin, isLessor } = require('../user/user.permission')
 const { isAdminOrOwner } = require('./motel.permission')
 const upload = require('../../middleware/multer')
+
+/**
+ * GET /api/motel/my-favorite
+ * @tags Motel
+ */
+ router.get('/my-favorite', auth, motelController.myFavoriteMotel)
+
 /**
  * GET /api/motel/stats
  * @tags Motel
  */
 router.get('/stats', isAdmin, motelController.stats)
+
+/**
+ * POST /api/motel/{id}/toggle-favorite
+ * @tags Motel
+ */
+router.post('/:id/toggle-favorite', auth, motelController.toggleFavorite)
+
+
 /**
  * POST /api/motel/upload-image
  * @tags Motel

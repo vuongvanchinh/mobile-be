@@ -2,7 +2,7 @@ const { Motel } = require('./motel.model')
 const { handleCreateImages, fillLinkImages } = require('./motel.help')
 const { Image } = require('./motel.model')
 const { json } = require('express/lib/response')
-
+const User = require('../user/user.model')
 
 class MotelController {
     getMotels(req, res, next) {
@@ -43,6 +43,7 @@ class MotelController {
     }
 
     async motelDetail(req, res, next) {
+      
         const {id} = req.params
         Motel.findOne({_id: id}).populate('images', {url:1}).populate('owner', {name:1}).then(motel => {
             motel.images = fillLinkImages(motel.images, req.protocol + '://' + req.get('host'))
@@ -223,7 +224,7 @@ class MotelController {
         let query = req.query
 
         if (Object.keys(query).length === 0) {
-            query.type = 1
+            query.postType = 1
         }
         try {
             const zoomate = await Motel.count(query)
@@ -237,6 +238,78 @@ class MotelController {
             return next({
                 status: 400,
                 message: error.message
+            })
+        }
+    }
+
+    async toggleFavorite(req, res, next) {
+        const {id} = req.params
+        console.log("🚀 ~ file: motel.controller.js ~ line 247 ~ MotelController ~ toggleFavorite ~ id", id)
+        
+        const motel = await Motel.findOne({_id: id})
+        if (motel) {
+            const user = await User.findOne({_id: req.user._id})
+            let arr = []
+            let include = false
+            if (user.favoriteMotels) {
+                arr = user.favoriteMotels.map(i => {
+                    if(i.toString() === id) {
+                        include = true
+                    }
+
+                    return i.toString()
+                })
+                // console.log("🚀 ~ file: motel.controller.js ~ line 255 ~ MotelController ~ toggleFavorite ~ arr", arr, include)
+            }
+            if (user) {
+
+                if(!include) {
+                    if (!user.favoriteMotels) {
+                        user.favoriteMotels = [id]
+                    } else {
+                        user.favoriteMotels.push(id)
+                        
+                    }
+                    // console.log("🚀 ~ file: motel.controller.js ~ line 258 ~ MotelController ~ toggleFavorite ~ user.favoriteMotels", user.favoriteMotels)
+                    
+                } else {
+                    
+                    arr = arr.filter(item => item !== id)
+
+                    // console.log("🚀 ~ file: motel.controller.js ~ line 262 ~ MotelController ~ toggleFavorite ~ arr", arr)
+                    
+                    user.favoriteMotels = arr
+                }
+    
+                user.save().then(user => {
+                    Motel.find({_id: {$in: user.favoriteMotels}}).then(motels => 
+                        res.json({
+                            current: !include,
+                            currentList: motels
+                        })
+                    )
+                })
+            }
+            
+        } else {
+            next({
+                status: 404,
+                message: "not found"
+            })
+        }
+
+    }
+
+    async myFavoriteMotel (req, res, next) {
+        const user = await User.findOne({_id: req.user._id})
+        if (user) {
+            Motel.find({_id: {$in: user.favoriteMotels}}).then(motels => 
+                res.json(motels)
+            )
+        } else {
+            return next({
+                status: 400,
+                message: "please authen"
             })
         }
     }
