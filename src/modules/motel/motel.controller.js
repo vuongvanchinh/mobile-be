@@ -46,6 +46,12 @@ class MotelController {
       
         const {id} = req.params
         Motel.findOne({_id: id}).populate('images', {url:1}).populate('owner', {name:1}).then(motel => {
+            if (!motel) {
+                return  next({
+                    status: 404,
+                    message: "not found"
+                })
+            }
             motel.images = fillLinkImages(motel.images, req.protocol + '://' + req.get('host'))
             return res.json(motel)
         })
@@ -247,20 +253,24 @@ class MotelController {
         console.log("🚀 ~ file: motel.controller.js ~ line 247 ~ MotelController ~ toggleFavorite ~ id", id)
         
         const motel = await Motel.findOne({_id: id})
-        if (motel) {
-            const user = await User.findOne({_id: req.user._id})
-            let arr = []
-            let include = false
-            if (user.favoriteMotels) {
-                arr = user.favoriteMotels.map(i => {
-                    if(i.toString() === id) {
-                        include = true
-                    }
+        const user = await User.findOne({_id: req.user._id})
+        let arr = []
 
-                    return i.toString()
-                })
-                // console.log("🚀 ~ file: motel.controller.js ~ line 255 ~ MotelController ~ toggleFavorite ~ arr", arr, include)
-            }
+        let include = false
+        if (user.favoriteMotels) {
+            arr = user.favoriteMotels.map(i => {
+                if(i.toString() === id) {
+                    include = true
+                }
+
+                return i.toString()
+            })
+            // console.log("🚀 ~ file: motel.controller.js ~ line 255 ~ MotelController ~ toggleFavorite ~ arr", arr, include)
+        }
+        console.log("🚀 ~ file: motel.controller.js ~ line 258 ~ MotelController ~ toggleFavorite ~ arr", arr)
+
+        if (motel) {
+            
             if (user) {
 
                 if(!include) {
@@ -298,10 +308,34 @@ class MotelController {
             }
             
         } else {
-            next({
-                status: 404,
-                message: "not found"
-            })
+            if (include) {
+                arr = arr.filter(item => item !== id)
+
+                // console.log("🚀 ~ file: motel.controller.js ~ line 262 ~ MotelController ~ toggleFavorite ~ arr", arr)
+                
+                user.favoriteMotels = arr
+                user.save().then(user => {
+                    Motel.find({_id: {$in: user.favoriteMotels}}).populate('images').then(motels => {
+                        for(let i = 0; i < motels.length; i++) {
+                            motels[i].images = fillLinkImages(motels[i].images, req.protocol + '://' + req.get('host'))
+                        }
+                        
+
+                        res.json({
+                            current: !include,
+                            currentList: motels
+                        })
+                    }
+                    )
+                })
+
+            } else {
+                 next({
+                    status: 404,
+                    message: "not found"
+                })
+            } 
+           
         }
 
     }

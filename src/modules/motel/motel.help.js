@@ -13,6 +13,9 @@ const handleCreateImages = async (images, motel_id) => {
 }
 
 const fillLinkImages = (imgs, host) => {
+    if (!imgs) {
+        return []
+    }
     for(let i = 0; i < imgs.length; i++) {
         imgs[i].url=`${host}/${imgs[i].url}`
     }

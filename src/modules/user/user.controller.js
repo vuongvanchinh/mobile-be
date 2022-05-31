@@ -95,8 +95,10 @@ class UserController {
         })
     }
 
-    getCurrentUserInfo(req, res, next) {
-        return res.json(req.user)
+    async getCurrentUserInfo(req, res, next) {
+        const user = await User.findOne({_id: req.user._id})
+        user.password = undefined
+        return res.json(user)
     }
     
     updateUser(req, res, next){
