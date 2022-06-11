@@ -34,11 +34,15 @@ class UserController {
     }
 
     async login(req, res, next) {
-        const { email, password } = req.body
+        const { email, password, expoToken } = req.body
         if (email && password) {
             const user = await User.findOne({email: email})
             if (user && user.checkPassword(password)) {
+                // user.password = undefined
+                user.expoToken = expoToken
+                await user.save()
                 user.password = undefined
+
                 res.status(200).json({
                     jwt: jwt.sign({user: user, exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24)}, process.env.SECRET),
                     user: user

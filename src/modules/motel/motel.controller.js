@@ -1,9 +1,8 @@
 const { Motel } = require('./motel.model')
-const { handleCreateImages, fillLinkImages } = require('./motel.help')
+const { fillLinkImages } = require('./motel.help')
 const { Image } = require('./motel.model')
-const { json } = require('express/lib/response')
 const User = require('../user/user.model')
-const { Expo } =  require('expo-server-sdk');
+const { pushNoti} = require('../../modules/noti/createNoti')
 
 class MotelController {
     getMotels(req, res, next) {
@@ -34,13 +33,15 @@ class MotelController {
         body.owner = req.user._id
         const motel = new Motel(body)
         motel.save({new:true}).then(motel => {
-            return res.json(motel)
+            pushNoti(motel.address, req.user._id).then(() => {
+                return res.json(motel)
+            })
+            
         })
         .catch(err => next({
             status: 400,
             message: err.message
         }))
-        
     }
 
     async motelDetail(req, res, next) {
