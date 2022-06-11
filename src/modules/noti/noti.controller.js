@@ -28,7 +28,7 @@ class NotiController {
                     messages.push({
                         to: item.expoToken,
                         sound: 'default',
-                        body: `Have a new zoom at ${motel.address} `,
+                        body: `Vừa có một phòng mới ở ${motel.address}`,
                         data: { withSome: 'data' },
                     })
                 }
