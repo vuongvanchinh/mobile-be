@@ -3,6 +3,7 @@ const { handleCreateImages, fillLinkImages } = require('./motel.help')
 const { Image } = require('./motel.model')
 const { json } = require('express/lib/response')
 const User = require('../user/user.model')
+const { Expo } =  require('expo-server-sdk');
 
 class MotelController {
     getMotels(req, res, next) {
@@ -359,6 +360,8 @@ class MotelController {
             })
         }
     }
+
+   
 }
 
 module.exports = new MotelController()

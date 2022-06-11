@@ -7,7 +7,7 @@ const cors = require('cors')
 // route
 const userRoute = require('./modules/user/user.route')
 const motelRouter = require('./modules/motel/motel.route')
-
+const notiRoute = require('./modules/noti/noti.route')
 const auth = require('./middleware/auth')
 const swagger = require('./utils/swagger')
 const motelSocket = require("./modules/motel/motel.socket")
@@ -68,9 +68,10 @@ app.get('/', (req, res) => {
 
 
 
-
+app.use('/api', notiRoute)
 app.use('/api/user', userRoute)
 app.use('/api/motel', motelRouter)
+
 app.use((req, res, next) => {
     const error = new Error("404 not found");
     error.status = 404;

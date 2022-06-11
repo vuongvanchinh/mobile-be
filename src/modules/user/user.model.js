@@ -57,7 +57,11 @@ const User = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Motel'
         }
-    ]
+    ],
+    expoToken: {
+        type: String,
+        default: ''        
+    }
         
 }, {
     timestamps: true
