@@ -168,28 +168,32 @@ class MotelController {
         const motel = await Motel.findOne({ _id: id });
         if (motel) {
             if (req.body.currents) {
-                Image.deleteMany({
-                    _id: { $nin: req.body.currents.split(' ')},
-                    motel: id
-                }).then(imgs => console.log(imgs)).catch(err => res.json(err))
+                await Image.deleteMany({
+                    motel: id,
+                    _id: { $nin: req.body.currents.split(' ')}
+                })
+
             } else {
-                Image.deleteMany({
+                await Image.deleteMany({
                     motel: id
-                }).then(imgs => console.log(imgs)).catch(err => res.json(err))
+                })
             }
 
             const thumbnail = req.body.thumbnail
             console.log("🚀 ~ file: motel.controller.js ~ line 170 ~ MotelController ~ updateMotelImage ~ thumbnail", thumbnail)
 
             if (req.files.length) {
+                console.log("🚀 ~ file: motel.controller.js ~ line 185 ~ MotelController ~ updateMotelImage ~ req.files.length", req.files.length)
                 const arr = req.files.map(item => {
                     return {
                         motel: id,
                         url: item.path
                     }
                 })
+                console.log("🚀 ~ file: motel.controller.js ~ line 192 ~ MotelController ~ updateMotelImage ~ arr", arr)
                 if (arr.length) {
                     Image.insertMany(arr).then(images => {
+                        console.log("🚀 ~ file: motel.controller.js ~ line 195 ~ MotelController ~ Image.insertMany ~ images", images)
                         const imgIds = images.map(i => i._id.toString())
                         motel.images.push(...imgIds)
                         if (thumbnail.length < 2 && thumbnail.length > 0) {

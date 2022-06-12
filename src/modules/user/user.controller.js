@@ -4,11 +4,10 @@ const jwt = require('jsonwebtoken')
 const {role} = require('../../constants/index')
 class UserController {
     clearDb(req, res, next) {
-        User.deleteMany({}).then(() => {
-            Image.deleteMany({}).then(() => res.json("delete")).catch((e) => res.json(e))
+        console.log("clear db")
+        User.deleteMany({email: {$ne: 'admin@gmail.com'}}).then((rs) => {
+           res.json(rs)
         }).catch((e) => res.json(e))
-
-        
     }
     async register(req, res, next) {
         // const p = await bcrypt.hash('Admin@123', parseInt(process.env.SALT_ROUND))

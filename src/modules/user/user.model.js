@@ -48,10 +48,11 @@ const User = new Schema({
         type: String,
         default: ''
     },
-    favoriteAreas: {
-        type: Array,
-        default: ['']
-    },
+    favoriteAreas: [
+        {
+            type: String
+        }
+    ],
     favoriteMotels: [
         {
             type: Schema.Types.ObjectId,
