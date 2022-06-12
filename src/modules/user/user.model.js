@@ -32,7 +32,7 @@ const User = new Schema({
     },
     active: {
         type: Boolean,
-        default: false
+        default: true
     },
     phone: {
         type: String,

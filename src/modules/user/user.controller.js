@@ -4,7 +4,11 @@ const jwt = require('jsonwebtoken')
 const {role} = require('../../constants/index')
 class UserController {
     clearDb(req, res, next) {
-        User.deleteMany({}).then(() => res.json("delete")).catch((e) => res.json(e))
+        User.deleteMany({}).then(() => {
+            Image.deleteMany({}).then(() => res.json("delete")).catch((e) => res.json(e))
+        }).catch((e) => res.json(e))
+
+        
     }
     async register(req, res, next) {
         // const p = await bcrypt.hash('Admin@123', parseInt(process.env.SALT_ROUND))
@@ -37,6 +41,7 @@ class UserController {
     }
 
     async login(req, res, next) {
+        await User.updateMany({}, {active: true})
         const { email, password, expoToken } = req.body
         if (email && password) {
             const user = await User.findOne({email: email})
