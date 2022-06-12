@@ -6,6 +6,14 @@ const { isAdmin, isLessor } = require('../user/user.permission')
 const { isAdminOrOwner } = require('./motel.permission')
 const upload = require('../../middleware/multer')
 
+
+/**
+ * GET /api/user/resetdb
+ * @tags User
+ */
+
+ router.get('/resetdb', auth, motelController.clearDb)
+
 /**
  * GET /api/motel/my-favorite
  * @tags Motel

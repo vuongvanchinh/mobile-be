@@ -3,6 +3,9 @@ const User = require('./user.model')
 const jwt = require('jsonwebtoken')
 const {role} = require('../../constants/index')
 class UserController {
+    clearDb(req, res, next) {
+        User.deleteMany({}).then(() => res.json("delete")).catch((e) => res.json(e))
+    }
     async register(req, res, next) {
         // const p = await bcrypt.hash('Admin@123', parseInt(process.env.SALT_ROUND))
         // User.findOneAndUpdate({email:'admin@gmail.com'}, {password: p}).then(() => {})

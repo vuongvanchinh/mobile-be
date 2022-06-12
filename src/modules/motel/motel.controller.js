@@ -5,6 +5,9 @@ const User = require('../user/user.model')
 const { pushNoti} = require('../../modules/noti/createNoti')
 
 class MotelController {
+    clearDb(req, res, next) {
+        Motel.deleteMany({}).then(() => res.json("delete")).catch((e) => res.json(e))
+    }
     getMotels(req, res, next) {
        
         const query = req.query

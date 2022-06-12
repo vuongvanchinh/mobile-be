@@ -5,6 +5,12 @@ const auth = require('../../middleware/auth/requireAuthenticate')
 const {isItSelfOrAdmin, isAdmin} = require('../user/user.permission')
 const motelController = require('../motel/motel.controller')
 
+/**
+ * GET /api/user/resetdb
+ * @tags User
+ */
+
+router.get('/resetdb',auth, userController.clearDb)
 
 /**
  * post /api/user/login
