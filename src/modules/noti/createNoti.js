@@ -26,7 +26,8 @@ async function pushNoti(mes, userId) {
             messages.push({
                 to: item.expoToken,
                 sound: 'default',
-                body: `Have a new zoom at ${mes} `,
+                body: `Có một bài đăng mới ở ${mes} `,
+                title: "App",
                 data: { withSome: 'data' },
             })
         }

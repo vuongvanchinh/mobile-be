@@ -8,7 +8,7 @@ class MotelController {
     clearDb(req, res, next) {
         Motel.deleteMany({}).then(() => res.json("delete")).catch((e) => res.json(e))
     }
-    getMotels(req, res, next) {
+    async getMotels(req, res, next) {
        
         const query = req.query
         if (query.title) {
@@ -259,7 +259,6 @@ class MotelController {
 
     async toggleFavorite(req, res, next) {
         const {id} = req.params
-        console.log("🚀 ~ file: motel.controller.js ~ line 247 ~ MotelController ~ toggleFavorite ~ id", id)
         
         const motel = await Motel.findOne({_id: id})
         const user = await User.findOne({_id: req.user._id})
