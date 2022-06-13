@@ -3,7 +3,7 @@ const User = require('../user/user.model')
 const { Expo } = require('expo-server-sdk');
 const {interest} = require('../../utils/interest')
 
-async function pushNoti(mes, userId) {
+async function pushNoti(mes, userId, post) {
     console.log("🚀 ~ file: createNoti.js ~ line 6 ~ pushNoti ~ mes", mes, userId)
     const expo = new Expo()
     User.find({ _id: { $ne: userId } }).select(['expoToken', 'favoriteAreas']).then(rs => {
@@ -28,7 +28,7 @@ async function pushNoti(mes, userId) {
                 sound: 'default',
                 body: `Có một bài đăng mới ở ${mes} `,
                 title: "App",
-                data: { withSome: 'data' },
+                data: post,
             })
         }
         let chunks = expo.chunkPushNotifications(messages);

@@ -36,7 +36,7 @@ class MotelController {
         body.owner = req.user._id
         const motel = new Motel(body)
         motel.save({new:true}).then(motel => {
-            pushNoti(motel.address, req.user._id).then(() => {
+            pushNoti(motel.address, req.user._id, motel).then(() => {
                 return res.json(motel)
             })
             
