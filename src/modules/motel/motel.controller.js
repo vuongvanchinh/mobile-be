@@ -36,10 +36,7 @@ class MotelController {
         body.owner = req.user._id
         const motel = new Motel(body)
         motel.save({new:true}).then(motel => {
-            pushNoti(motel.address, req.user._id, motel).then(() => {
-                return res.json(motel)
-            })
-            
+            return res.json(motel)
         })
         .catch(err => next({
             status: 400,
@@ -126,13 +123,17 @@ class MotelController {
                 if (arr.length) {
                     Image.insertMany(arr).then(function(images){
                         const imgIds = images.map(i => i._id.toString())
-
                         motel.images.push(...imgIds)
                         if (motel.images.length) {
                             motel.thumbnail = motel.images[0].toString()
                         }
-                        motel.save()
-                       res.json(fillLinkImages(images, req.protocol + '://' + req.get('host')))
+                        const imgs = fillLinkImages(images, req.protocol + '://' + req.get('host'))
+                        motel.save().then((motel) =>{
+                            pushNoti(motel.address, req.user._id, {...motel.toObject(), images: imgs}).then(() => {
+                                console.log("Alo")
+                            })
+                        })
+                       res.json(imgs)
                         
                     }).catch(err => {
                         console.log(err)

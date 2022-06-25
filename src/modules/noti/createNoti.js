@@ -4,14 +4,15 @@ const { Expo } = require('expo-server-sdk');
 const {interest} = require('../../utils/interest')
 
 async function pushNoti(mes, userId, post) {
+    console.log("🚀 ~ file: createNoti.js ~ line 7 ~ pushNoti ~ post", post)
     console.log("🚀 ~ file: createNoti.js ~ line 6 ~ pushNoti ~ mes", mes, userId)
     const expo = new Expo()
     User.find({ _id: { $ne: userId } }).select(['expoToken', 'favoriteAreas']).then(rs => {
-        console.log("🚀 ~ file: createNoti.js ~ line 9 ~ User.find ~ rs", rs)
+        // console.log("🚀 ~ file: createNoti.js ~ line 9 ~ User.find ~ rs", rs)
         let messages = []
         for (let item of rs) {
             if(item.expoToken) {
-                console.log("🚀 ~ file: noti.controller.js ~ line 18 ~ NotiController ~ User.find ~ item", item)
+                // console.log("🚀 ~ file: noti.controller.js ~ line 18 ~ NotiController ~ User.find ~ item", item)
             }
             // Check that all your push tokens appear to be valid Expo push tokens
             if (!Expo.isExpoPushToken(item.expoToken)) {
@@ -22,7 +23,7 @@ async function pushNoti(mes, userId, post) {
                 continue;
             }
 
-            console.log("KK", item.expoToken)
+            // console.log("KK", item.expoToken)
             messages.push({
                 to: item.expoToken,
                 sound: 'default',
@@ -38,7 +39,7 @@ async function pushNoti(mes, userId, post) {
             for (let chunk of chunks) {
                 try {
                     let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-                    console.log(ticketChunk);
+                    // console.log(ticketChunk);
                     tickets.push(...ticketChunk);
                 } catch (error) {
                     console.error(error);
