@@ -6,7 +6,10 @@ const { pushNoti} = require('../../modules/noti/createNoti')
 
 class MotelController {
     clearDb(req, res, next) {
-        Motel.deleteMany({}).then(() => res.json("delete")).catch((e) => res.json(e))
+        Motel.deleteOne({_id:'62b69271652bd49b1d09f3b8'}).then(rs => {
+            res.json(rs)
+        })
+        // Motel.deleteMany({}).then(() => res.json("delete")).catch((e) => res.json(e))
     }
     async getMotels(req, res, next) {
        
@@ -128,10 +131,14 @@ class MotelController {
                             motel.thumbnail = motel.images[0].toString()
                         }
                         const imgs = fillLinkImages(images, req.protocol + '://' + req.get('host'))
-                        motel.save().then((motel) =>{
-                            pushNoti(motel.address, req.user._id, {...motel.toObject(), images: imgs}).then(() => {
-                                console.log("Alo")
-                            })
+                        motel.save().then((motel) => {
+                            try {
+                                pushNoti(motel.address, req.user._id, {...motel.toObject(), images: imgs}).then(() => {
+                                    console.log("Alo")
+                                })
+                            } catch (error) {
+                                console.log("🚀 ~ file: motel.controller.js ~ line 137 ~ MotelController ~ motel.save ~ error", error)
+                            }
                         })
                        res.json(imgs)
                         
